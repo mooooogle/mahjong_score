@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0c1117" />
+    <meta name="description" content="雀魂の段位戦ルールを基準にした三人麻雀の得点計算アプリ" />
+    <title>三麻スコア — 得点計算</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@500;600;700;800&family=Noto+Sans+JP:wght@500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#hand-panel" aria-label="三麻スコア ホーム">
+          <span class="brand-mark"><span></span><span></span><span></span></span>
+          <span>三麻<span class="brand-accent">スコア</span></span>
+        </a>
+        <div class="header-actions">
+          <div class="header-score"><span>現在の得点</span><strong id="header-score">2,000</strong><small>点</small></div>
+          <button class="header-settlement" id="open-settlement" type="button">精算</button>
+          <button class="header-reset" id="global-reset" type="button">リセット</button>
+        </div>
+      </header>
+
+      <main>
+        <nav class="mode-tabs" aria-label="計算モード">
+          <button class="mode-tab is-active" data-mode="hand" type="button"><span class="tab-number">01</span><span>手牌計算</span></button>
+          <button class="mode-tab" data-mode="match" type="button"><span class="tab-number">02</span><span>対局精算</span></button>
+        </nav>
+
+        <section class="mode-panel is-active" id="hand-panel" aria-labelledby="hand-tab">
+          <div class="section-intro">
+            <div><div class="section-kicker">HAND / 01</div><h2>あがりの点数</h2></div>
+            <div class="rule-chip">三麻・ツモ損あり</div>
+          </div>
+
+          <div class="calculator-grid">
+            <div class="form-card">
+              <div class="field-group">
+                <label>あがり方</label>
+                <div class="segmented two-up" data-choice-group="winType">
+                  <button class="choice is-selected" data-value="ron" type="button">ロン</button>
+                  <button class="choice" data-value="tsumo" type="button">ツモ</button>
+                </div>
+              </div>
+
+              <div class="field-group toggle-field-group">
+                <label>条件</label>
+                <div class="toggle-grid">
+                  <button class="toggle-choice" id="dealer-toggle" type="button" aria-pressed="false"><span class="toggle"></span><span>親</span><small>親で計算</small></button>
+                  <button class="toggle-choice" id="open-toggle" type="button" aria-pressed="false"><span class="toggle"></span><span>鳴きあり</span><small>副露あり</small></button>
+                </div>
+              </div>
+
+              <div class="field-group compact-field">
+                <div class="compact-label"><label>本場</label><span>点数に加算</span></div>
+                <div class="number-input stepper-input"><button data-step="honba" data-delta="-1" data-max="99" type="button" aria-label="本場を減らす">−</button><strong id="honba-value">0</strong><button data-step="honba" data-delta="1" data-max="99" type="button" aria-label="本場を増やす">＋</button><span>本場</span></div>
+              </div>
+
+              <div class="field-group yaku-field">
+                <div class="yaku-heading"><label>役を選択</label><span class="han-total"><strong id="han-value">3</strong>翻</span></div>
+                <div class="yaku-section-label" id="closed-yaku-label">門前役</div>
+                <div class="yaku-list" id="yaku-list-closed">
+<button class="yaku-option" data-yaku="riichi" data-han="1" data-open-han="0" type="button"><span>立直</span><b>1翻</b></button>
+                  <button class="yaku-option" data-yaku="ippatsu" data-han="1" data-open-han="0" type="button"><span>一発</span><b>1翻</b></button>
+                  <button class="yaku-option" data-yaku="menzenTsumo" data-han="1" data-open-han="0" type="button"><span>門前清自摸和</span><b>1翻</b></button>
+                  <button class="yaku-option" data-yaku="pinfu" data-han="1" data-open-han="0" type="button"><span>平和</span><b>1翻</b></button>
+                  <button class="yaku-option" data-yaku="chiitoitsu" data-han="2" data-open-han="0" type="button"><span>七対子</span><b>2翻</b></button>
+                </div>
+                <div class="yaku-section-label" id="normal-yaku-label">通常役</div>
+                <div class="yaku-list">
+<button class="yaku-option" data-yaku="tanyao" data-han="1" data-open-han="1" type="button"><span>断么九</span><b>1翻</b></button>
+                  <button class="yaku-option" data-yaku="ittsu" data-han="2" data-open-han="1" type="button"><span>一気通貫</span><b>2 / 1翻</b></button>
+                  <button class="yaku-option" data-yaku="sanshokuDoukou" data-han="2" data-open-han="2" type="button"><span>三色同刻</span><b>2翻</b></button>
+                  <button class="yaku-option" data-yaku="toitoi" data-han="2" data-open-han="2" type="button"><span>対々和</span><b>2翻</b></button>
+                  <button class="yaku-option" data-yaku="sanankou" data-han="2" data-open-han="2" type="button"><span>三暗刻</span><b>2翻</b></button>
+                  <button class="yaku-option" data-yaku="sankantsu" data-han="2" data-open-han="2" type="button"><span>三槓子</span><b>2翻</b></button>
+                  <button class="yaku-option" data-yaku="shousangen" data-han="2" data-open-han="2" type="button"><span>小三元</span><b>2翻</b></button>
+                  <button class="yaku-option" data-yaku="honroutou" data-han="2" data-open-han="2" type="button"><span>混老頭</span><b>2翻</b></button>
+                  <button class="yaku-option" data-yaku="honchantaiyao" data-han="2" data-open-han="1" type="button"><span>混全帯么九</span><b>2 / 1翻</b></button>
+                  <button class="yaku-option" data-yaku="junchantaiyao" data-han="3" data-open-han="2" type="button"><span>純全帯么九</span><b>3 / 2翻</b></button>
+                  <button class="yaku-option" data-yaku="ryanpeikou" data-han="3" data-open-han="0" type="button"><span>二盃口</span><b>3翻</b></button>
+                  <button class="yaku-option" data-yaku="honitsu" data-han="3" data-open-han="2" type="button"><span>混一色</span><b>3 / 2翻</b></button>
+                  <button class="yaku-option" data-yaku="chinitsu" data-han="6" data-open-han="5" type="button"><span>清一色</span><b>6 / 5翻</b></button>
+                </div>
+                <div class="bonus-row yaku-count-row">
+                  <span>役牌（自風・場風・三元牌）</span>
+                  <div class="mini-stepper"><button data-step="yakuhaiCount" data-delta="-1" type="button">−</button><strong id="yakuhai-count-value">0</strong><button data-step="yakuhaiCount" data-delta="1" type="button">＋</button></div>
+                </div>
+                <div class="yaku-section-label">加算翻</div>
+                <div class="bonus-row">
+                  <span>ドラ・赤ドラ・北抜き</span>
+                  <div class="mini-stepper"><button data-step="bonusHan" data-delta="-1" type="button">−</button><strong id="bonus-han-value">0</strong><button data-step="bonusHan" data-delta="1" type="button">＋</button></div>
+                </div>
+                <div class="yaku-section-label">役満</div>
+                <button class="yakuman-option" id="yakuman-option" type="button"><span>役満</span><b>ON / OFF</b></button>
+              </div>
+
+              <div class="field-group fu-group" id="fu-field">
+                <div class="yaku-heading"><label>符を自動計算</label><span class="han-total"><strong id="fu-value">30</strong>符</span></div>
+                <div class="fu-breakdown" id="fu-breakdown">基本20符 ＋ 門前ロン10符</div>
+                <div id="fu-details">
+                  <div class="fu-control-row"><span>待ち（2符）</span><div class="segmented wait-toggle-single fu-choice" data-choice-group="waitFu"><button class="choice" id="wait-fu-toggle" data-value="2" type="button" aria-pressed="false">嵌張・辺張・単騎のいずれか</button></div></div>
+                  <div class="fu-control-row" id="pair-fu-row"><label for="pair-fu">雀頭</label><select id="pair-fu"><option value="0" selected>役牌なし（0符）</option><option value="2">役牌（2符）</option><option value="4">ダブル役牌（4符）</option></select></div>
+                  <div id="fu-meld-selection">
+                    <div class="yaku-section-label">刻子・槓子の数（合計0〜4組）</div>
+                    <div class="fu-count-grid">
+                      <div class="fu-count-row"><span>刻子の数</span><div class="mini-stepper"><button data-step="meldCount" data-delta="-1" data-max="4" type="button">−</button><strong id="meldCount-value">0</strong><button data-step="meldCount" data-delta="1" data-max="4" type="button">＋</button></div></div>
+                      <div class="fu-count-row"><span>槓子の数</span><div class="mini-stepper"><button data-step="kanCount" data-delta="-1" data-max="4" type="button">−</button><strong id="kanCount-value">0</strong><button data-step="kanCount" data-delta="1" data-max="4" type="button">＋</button></div></div>
+                    </div>
+                    <div class="fu-meld-grid" id="fu-meld-grid"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="option-row">
+                <label class="toggle-label"><input id="riichi-stick-toggle" type="checkbox" /><span class="toggle"></span><span>リーチ棒を加算</span></label>
+                <span class="field-help">役は上のボタンから複数選択できます</span>
+              </div>
+            </div>
+
+            <div class="result-card" aria-live="polite">
+              <div class="result-topline"><span>RESULT</span><span id="result-label">子・ロン</span></div>
+              <div class="result-main"><span id="result-total">3,900</span><small>点</small></div>
+              <div class="result-detail" id="result-detail">30符 3翻</div>
+              <div class="payment-list" id="payment-list"></div>
+              <div class="result-note" id="result-note">本場・供託は含まれていません</div>
+            </div>
+          </div>
+
+          <div class="reference-strip">
+            <div><span class="reference-label">目安</span><strong id="reference-text">子ロン 3翻30符 → 3,900点</strong></div>
+            <span class="field-help">役・符を選ぶと自動計算</span>
+          </div>
+        </section>
+
+        <section class="mode-panel" id="match-panel" aria-labelledby="match-tab">
+          <div class="section-intro">
+            <div><div class="section-kicker">MATCH / 02</div><h2>対局精算</h2></div>
+            <div class="section-intro-actions"><button class="secondary-button match-settings-button" id="match-settings" type="button">初期設定</button><div class="rule-chip">35,000点持ち</div></div>
+          </div>
+          <div class="match-layout match-layout-single">
+            <div class="form-card match-form is-hidden" aria-hidden="true">
+              <div class="form-card-head"><span>INITIAL SETUP</span><span class="muted">名前と開始点</span></div>
+              <p class="helper-text">対局開始時の名前と、全員共通の開始点を設定してください。設定を保存すると、ここからあがり履歴を積み上げます。</p>
+              <div class="player-inputs setup-player-inputs">
+                <div class="player-input-row"><span class="player-badge player-a">A</span><input class="name-input" id="player-a-name" type="text" value="プレイヤー A" aria-label="プレイヤーAの名前" /></div>
+                <div class="player-input-row"><span class="player-badge player-b">B</span><input class="name-input" id="player-b-name" type="text" value="プレイヤー B" aria-label="プレイヤーBの名前" /></div>
+                <div class="player-input-row"><span class="player-badge player-c">C</span><input class="name-input" id="player-c-name" type="text" value="プレイヤー C" aria-label="プレイヤーCの名前" /></div>
+              </div>
+              <div class="common-point-setting"><label for="start-point">全員の開始点</label><div class="point-input"><input id="start-point" type="number" value="35000" inputmode="numeric" aria-label="全員の開始点" /><span>点</span></div></div>
+              <div class="setup-actions"><button class="secondary-button" id="save-initial-settings" type="button">初期設定を保存</button><button class="text-button" id="restart-match" type="button">初期設定からやり直す</button></div>
+              <div class="settlement-options">
+                <div><label for="oka-input">返し点</label><div class="inline-number"><input id="oka-input" type="number" value="35000" /><span>点</span></div></div>
+                <div><label for="uma-input">順位ウマ</label><select id="uma-input"><option value="45">+45 / 0 / −45</option><option value="40">+40 / 0 / −40</option><option value="30">+30 / 0 / −30</option></select></div>
+              </div>
+
+              <div class="hand-settlement">
+                <div class="form-card-head"><span>HAND SETTLEMENT</span><span class="muted">現在の計算結果</span></div>
+                <div class="current-hand-score"><span>このあがり</span><strong id="settlement-hand-score">3,900点</strong></div>
+                <div class="settlement-selects">
+                  <div><label for="winner-select">あがり者</label><select id="winner-select"></select></div>
+                  <div id="ron-from-field"><label for="ron-from-select">ロンされた人</label><select id="ron-from-select"></select></div>
+                  <div><label for="settlement-dealer-select">親</label><select id="settlement-dealer-select"></select></div>
+                </div>
+                <button class="primary-button" id="apply-hand-result" type="button">このあがりを精算に反映</button>
+                <p class="settlement-feedback" id="settlement-feedback" role="status"></p>
+              </div>
+            </div>
+
+            <div class="settlement-card" aria-live="polite">
+              <div class="result-topline"><span>CURRENT SCORE</span><span>対局中の持ち点</span></div>
+              <div id="current-score-list"></div>
+              <div class="history-heading"><span>あがり履歴</span><span id="history-count">0件</span></div>
+              <div class="history-list" id="history-list"></div>
+              <div class="result-topline final-settlement-title is-hidden"><span>FINAL SETTLEMENT</span><span>雀魂段位戦</span></div>
+              <div id="settlement-list" class="is-hidden"></div>
+              <div class="settlement-foot is-hidden"><span>合計</span><strong id="settlement-total">±0</strong></div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <div class="wizard-backdrop is-hidden" id="settlement-wizard" role="dialog" aria-modal="true" aria-labelledby="wizard-title">
+        <div class="wizard-modal">
+          <div class="wizard-header">
+            <div><span class="section-kicker">SETTLEMENT WIZARD</span><h2 id="wizard-title">初期設定</h2></div>
+            <button class="wizard-close" id="wizard-close" type="button" aria-label="ウィザードを閉じる">×</button>
+          </div>
+          <div class="wizard-progress"><span id="wizard-progress-label">STEP 1 / 4</span><div class="wizard-progress-track"><span id="wizard-progress-bar"></span></div></div>
+          <div class="wizard-body">
+            <section class="wizard-step" id="wizard-setup-step">
+              <p class="wizard-lead">対局開始時の名前と、全員共通の開始点を設定してください。</p>
+              <div class="wizard-player-fields">
+                <label><span>A</span><input id="wizard-a-name" type="text" aria-label="プレイヤーAの名前" /></label>
+                <label><span>B</span><input id="wizard-b-name" type="text" aria-label="プレイヤーBの名前" /></label>
+                <label><span>C</span><input id="wizard-c-name" type="text" aria-label="プレイヤーCの名前" /></label>
+              </div>
+              <label class="wizard-point-field" for="wizard-start-point">全員の開始点<input id="wizard-start-point" type="number" inputmode="numeric" value="35000" /></label>
+            </section>
+            <section class="wizard-step is-hidden" id="wizard-winner-step">
+              <p class="wizard-lead">今回のあがり者を選択してください。</p>
+              <div class="wizard-choice-grid" id="wizard-winner-options"></div>
+            </section>
+            <section class="wizard-step is-hidden" id="wizard-ronFrom-step">
+              <p class="wizard-lead">誰からのロンかを選択してください。</p>
+              <div class="wizard-choice-grid" id="wizard-ron-options"></div>
+            </section>
+            <section class="wizard-step is-hidden" id="wizard-dealer-step">
+              <p class="wizard-lead">今回の親を選択してください。</p>
+              <div class="wizard-choice-grid" id="wizard-dealer-options"></div>
+            </section>
+            <section class="wizard-step is-hidden" id="wizard-confirm-step">
+              <p class="wizard-lead">この内容で精算します。</p>
+              <div class="wizard-result"><span>今回の得点</span><strong id="wizard-result-score">2,000点</strong></div>
+              <dl class="wizard-summary" id="wizard-summary"></dl>
+            </section>
+          </div>
+          <div class="wizard-actions">
+            <button class="wizard-secondary" id="wizard-cancel" type="button">キャンセル</button>
+            <div class="wizard-navigation"><button class="text-button" id="wizard-back" type="button">戻る</button><div class="wizard-primary-slot"><button class="primary-button wizard-next" id="wizard-next" type="button">次へ</button><button class="primary-button is-hidden" id="wizard-apply" type="button">精算に反映</button></div></div>
+          </div>
+        </div>
+      </div>
+
+      <footer><span>三麻スコア</span><span>simple tools for serious games</span></footer>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
