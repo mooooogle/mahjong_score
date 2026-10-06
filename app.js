@@ -283,7 +283,9 @@ function renderYakuState() {
   document.querySelector('#pair-fu-row').classList.toggle('is-hidden', pairFixed);
   const fixedFu = state.yakuman || state.selectedYakus.has('chiitoitsu') || state.selectedYakus.has('pinfu');
   const fuNotRequired = state.yakuman || han >= 5;
+  const fuField = document.querySelector('#fu-field');
   const fuDetails = document.querySelector('#fu-details');
+  fuField.classList.toggle('is-hidden', fuNotRequired);
   fuDetails.classList.toggle('is-hidden', fixedFu);
   fuDetails.classList.toggle('is-disabled', fuNotRequired && !fixedFu);
   fuDetails.setAttribute('aria-disabled', String(fuNotRequired && !fixedFu));
